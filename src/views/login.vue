@@ -180,6 +180,7 @@ export default {
     },
     handleLogin() {
       this.$refs.loginForm.validate((valid) => {
+        console.log(valid);
         if (valid) {
           this.loading = true;
           if (this.loginForm.rememberMe) {

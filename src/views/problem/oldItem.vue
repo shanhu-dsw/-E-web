@@ -308,6 +308,7 @@ export default {
           }
         });
     },
+    //根据被检查单位获取通知人，并发送指定通知
     getmessage_user(problem_uuid) {
       let query = {
         rows: 1000,
@@ -421,7 +422,6 @@ export default {
             });
             var mountOfLine = 10;
             this.fileImgUrl = this.twoDimensional(imgArray, mountOfLine);
-            console.log(this.fileImgUrl);
           } else {
             this.$message.error("请求失败");
           }
@@ -448,7 +448,6 @@ export default {
             this.problemTypeList = item.problem_types.filter(
               (data) => data.parent_uuid == self_uuid
             );
-            console.log(this.problemTypeList);
             //根据视频督察问题类型自动选择现场督察问题类型
             this.problemTypeList.forEach((item) => {
               if (item.name.indexOf(this.oldName) != -1) {

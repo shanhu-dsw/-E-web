@@ -109,7 +109,7 @@
           </div>
         </div>
         <div class="report-right">
-          <!-- <div style="background: #fff; padding: 15px 20px 20px 20px">
+          <div style="background: #fff; padding: 15px 20px 20px 20px">
             <el-select
               v-model="selUUid"
               placeholder="请选择问题单位"
@@ -127,7 +127,7 @@
               >
               </el-option>
             </el-select>
-          </div> -->
+          </div>
 
           <div id="div1">
             <el-card>
@@ -337,7 +337,7 @@
                 class="clearfix"
               >
                 <span>工作量排行</span>
-                <!-- <div class="pull-right">
+                <div class="pull-right">
                   <el-date-picker
                     size="small"
                     v-model="dateRange12"
@@ -352,10 +352,12 @@
                   >
                   </el-date-picker>
 
-                  <el-button size="small" type="primary" @click="getReport12"
-                    >统计</el-button
-                  >
-                </div> -->
+                  <el-button
+                    size="small"
+                    type="primary"
+                    @click="getReport12"
+                  >统计</el-button>
+                </div>
               </div>
               <div style="font-size: 13px">
                 <div
@@ -1040,14 +1042,14 @@ export default {
     },
 
     getReport12() {
-      // const query = {
-      //   level: 2,
-      // };
-      // if (this.dateRange11) {
-      //   query.start_create_datetime = this.parseTime(this.dateRange12[0]);
-      //   query.end_create_datetime = this.parseTime(this.dateRange12[1]);
-      // }
-      getDepartmentWorkloadFromCache().then((resp) => {
+      const query = {};
+      if (this.dateRange11) {
+        query.start_create_datetime =
+          this.parseTime(this.dateRange12[0], "{y}-{m}-{d}") + " 00:00:00";
+        query.end_create_datetime =
+          this.parseTime(this.dateRange12[1], "{y}-{m}-{d}") + " 23:59:59";
+      }
+      getDepartmentWorkloadFromCache(query).then((resp) => {
         this.rtList12 = resp.array;
         this.rtList12.sort(this.sortBy("count"));
         this.rtList12.forEach((item) => {
@@ -1144,7 +1146,7 @@ export default {
       }
       query = checkAdmin(this.admin, query, true);
 
-      getProblem(query).then((resp) => {
+      getProblemExact(query).then((resp) => {
         this.rtList5 = resp.array;
       });
     },

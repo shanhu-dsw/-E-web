@@ -302,6 +302,7 @@
             >
               <el-select
                 v-model="formPr.to_uuid"
+                disabled
                 placeholder="被选择检查问题单位"
                 @change="deptSelChange"
                 style="width: 100%"
@@ -326,6 +327,7 @@
               <el-select
                 v-model="formPr.problem_type"
                 placeholder="请选择问题类型"
+                disabled
                 style="width: 100%"
                 clearable
                 filterable

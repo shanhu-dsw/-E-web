@@ -1,0 +1,12 @@
+{
+    "user": {
+        "username": "supervision_271898",
+        "password": "271898",
+        "source_type": "Admin"
+    },
+    "delUser": [
+        "271822",
+        "271898",
+        "271809"
+    ]
+}

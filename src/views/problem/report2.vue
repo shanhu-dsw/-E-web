@@ -61,7 +61,7 @@
                 class="img"
                 :src="word"
               />
-              <span class="txt">业务警种检查统计报告</span>
+              <span class="txt">各业务警种检查统计报告</span>
 
             </el-col>
             <el-col
