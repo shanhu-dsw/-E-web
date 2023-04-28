@@ -136,11 +136,8 @@ export default {
     },
     onDialogOk() {
       let problemTypes = this.$refs.tree.getCheckedKeys()
-      if (problemTypes.length === 0) {
-        this.$message.error('请先勾选问题分类')
-        return
-      }
-      let problemTypesStr = `${problemTypes.join(';')};`
+      let problemTypesStr =
+        problemTypes.length > 0 ? `${problemTypes.join(';')};` : ''
       let { uuid } = this.currentDepartment || {}
       modifyProblemTypeApi({ problem_types: problemTypesStr, uuid }).then(
         () => {
