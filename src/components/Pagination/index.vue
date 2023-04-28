@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'hidden':hidden}" class="pagination-container">
+  <div :class="{ hidden: hidden }" class="pagination-container">
     <el-pagination
       :background="background"
       :current-page.sync="currentPage"
@@ -31,7 +31,7 @@ export default {
     },
     limit: {
       type: Number,
-      default: 20
+      default: 10
     },
     pageSizes: {
       type: Array,
@@ -62,8 +62,7 @@ export default {
     }
   },
   data() {
-    return {
-    };
+    return {}
   },
   computed: {
     currentPage: {
@@ -103,12 +102,31 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .pagination-container {
-  background: #fff;
-  padding: 32px 16px;
-}
-.pagination-container.hidden {
-  display: none;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0 !important;
+  height: 28px;
+  margin-top: 20px;
+  &.hidden {
+    display: none;
+  }
+  ::v-deep .el-pagination {
+    padding: 0;
+    font-weight: normal;
+    .el-select .el-input .el-input__inner,
+    .el-pagination__editor.el-input .el-input__inner {
+      border: 1px #f3f7fa solid;
+    }
+    &.el-pagination.is-background .btn-prev,
+    &.el-pagination.is-background .btn-next,
+    &.el-pagination.is-background .el-pager li {
+      background-color: #fff;
+    }
+    &.el-pagination.is-background .el-pager li:not(.disabled).active {
+      background-color: #1890ff;
+    }
+  }
 }
 </style>

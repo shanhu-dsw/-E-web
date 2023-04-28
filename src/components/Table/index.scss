@@ -1,0 +1,23 @@
+.custom-table-container {
+  padding: 10px;
+  box-sizing: border-box;
+  flex: 1;
+  display: flex;
+  .el-table .el-table__header-wrapper th,
+  .el-table .el-table__fixed-header-wrapper th {
+    background-color: #f3f7fa;
+  }
+  .el-table--striped
+    .el-table__body
+    tr.el-table__row--striped
+    td.el-table__cell {
+    background-color: #fafbfd;
+  }
+  .el-table th.el-table__cell.is-leaf,
+  .el-table td.el-table__cell {
+    border-bottom: 1px #f3f7fa solid;
+  }
+  .el-table::before {
+    display: none;
+  }
+}

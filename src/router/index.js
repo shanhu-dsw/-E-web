@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import { flatArrayObj } from '@/utils'
 
 Vue.use(Router)
 
@@ -103,49 +104,190 @@ export const constantRoutes = [
       {
         path: 'add',
         component: () => import('@/views/problem/add'),
-        name: 'add',
+        name: 'add'
       },
       {
         path: 'list',
         component: () => import('@/views/problem/list'),
-        name: 'list',
+        name: 'list'
       },
       {
         path: 'list2',
         component: () => import('@/views/problem/list2'),
-        name: 'list2',
+        name: 'list2'
       },
       {
         path: 'view',
         component: () => import('@/views/problem/view'),
-        name: 'view',
+        name: 'view'
       },
       {
         path: 'message',
         component: () => import('@/views/problem/message'),
-        name: 'message',
+        name: 'message'
       },
       {
         path: 'report',
         component: () => import('@/views/problem/report'),
-        name: 'report',
+        name: 'report'
       },
       {
         path: 'user',
         component: () => import('@/views/problem/user'),
-        name: 'user',
+        name: 'user'
       },
       {
         path: 'report2',
         component: () => import('@/views/problem/report2'),
-        name: 'report2',
+        name: 'report2'
       },
       {
         path: 'oldList',
         component: () => import('@/views/problem/oldList'),
-        name: 'oldList',
-      },
+        name: 'oldList'
+      }
     ]
+  }
+]
+
+// BP后台路由匹配顶部、左侧路由菜单
+export const BPMenuRoutes = [
+  {
+    path: 'securityCenter',
+    name: 'securityCenter',
+    meta: { title: '安全中心' },
+    component: () => import('@blackPearl/securityCenter/index'),
+    redirect: '/blackPearl/securityCenter/accountSecurity/menuManagement',
+    children: [
+      {
+        path: 'securityCenter/accountSecurity',
+        name: 'accountSecurity',
+        meta: { title: '账户安全' },
+        component: () => import('@blackPearl/securityCenter/index'),
+        redirect: '/blackPearl/securityCenter/accountSecurity/menuManagement',
+        children: [
+          {
+            path: 'securityCenter/accountSecurity/menuManagement',
+            name: 'menuManagement',
+            meta: { title: '菜单管理' },
+            component: () =>
+              import('@blackPearl/securityCenter/account/menu/index')
+          },
+          {
+            path: 'securityCenter/accountSecurity/roleManagement',
+            name: 'roleManagement',
+            meta: { title: '角色管理' },
+            component: () =>
+              import('@blackPearl/securityCenter/account/role/index')
+          },
+          {
+            path: 'securityCenter/accountSecurity/adminManagement',
+            name: 'adminManagement',
+            meta: { title: '管理员管理' },
+            component: () =>
+              import('@blackPearl/securityCenter/account/adminUser/index')
+          }
+        ]
+      }
+    ]
+  },
+  {
+    path: 'supervisionSpot',
+    name: 'supervisionSpot',
+    meta: { title: '现场督察' },
+    component: () => import('@blackPearl/supervisionSpot/index'),
+    redirect:
+      '/blackPearl/supervisionSpot/organizationalStructure/departmentTypeManagement',
+    children: [
+      {
+        path: 'supervisionSpot/organizationalStructure',
+        name: 'organizationalStructure',
+        meta: { title: '组织架构' },
+        component: () => import('@blackPearl/supervisionSpot/index'),
+        redirect:
+          '/blackPearl/supervisionSpot/organizationalStructure/departmentTypeManagement',
+        children: [
+          {
+            path: 'supervisionSpot/organizationalStructure/departmentTypeManagement',
+            name: 'departmentTypeManagement',
+            meta: { title: '类型管理' },
+            component: () =>
+              import(
+                '@blackPearl/supervisionSpot/organizational/departmentType/index'
+              )
+          },
+          {
+            path: 'supervisionSpot/organizationalStructure/departmentManagement',
+            name: 'departmentManagement',
+            meta: { title: '单位管理' },
+            component: () =>
+              import(
+                '@blackPearl/supervisionSpot/organizational/department/index'
+              )
+          }
+        ]
+      },
+      {
+        path: 'supervisionSpot/problemManagement',
+        name: 'problemManagement',
+        meta: { title: '问题管理' },
+        component: () => import('@blackPearl/supervisionSpot/index'),
+        redirect:
+          '/blackPearl/supervisionSpot/problemManagement/problemPersonTypeManagement',
+        children: [
+          {
+            path: 'supervisionSpot/problemManagement/problemPersonTypeManagement',
+            name: 'problemPersonTypeManagement',
+            meta: { title: '个人问题管理' },
+            component: () =>
+              import('@blackPearl/supervisionSpot/problem/person/index')
+          },
+          {
+            path: 'supervisionSpot/problemManagement/problemDepartmentTypeManagement',
+            name: 'problemDepartmentTypeManagement',
+            meta: { title: '单位问题管理' },
+            component: () =>
+              import('@blackPearl/supervisionSpot/problem/department/index')
+          }
+        ]
+      },
+      ,
+      {
+        path: 'supervisionSpot/sysManagement',
+        name: 'sysManagement',
+        meta: { title: '系统管理' },
+        component: () => import('@blackPearl/supervisionSpot/index'),
+        redirect: '/blackPearl/supervisionSpot/sysManagement/sysConfig',
+        children: [
+          {
+            path: 'supervisionSpot/sysManagement/sysConfig',
+            name: 'sysConfig',
+            meta: { title: '系统配置' },
+            component: () =>
+              import('@blackPearl/supervisionSpot/sysManage/sysConfig/index')
+          },
+          {
+            path: 'supervisionSpot/sysManagement/deleteFailRecordManagement',
+            name: 'deleteFailRecordManagement',
+            meta: { title: '删除失败记录管理' },
+            component: () =>
+              import(
+                '@blackPearl/supervisionSpot/sysManage/deleteFailRecord/index'
+              )
+          }
+        ]
+      }
+    ]
+  }
+]
+// BP后台总路由，注册路由
+export const BPAdminRoutes = [
+  {
+    path: '/blackPearl',
+    component: () => import('@/views/blackPearl/index'),
+    hidden: true,
+    redirect: '/blackPearl/securityCenter/accountSecurity/menuManagement',
+    children: flatArrayObj(BPMenuRoutes, 'children')
   }
 ]
 
@@ -206,7 +348,7 @@ export const dynamicRoutes = [
         meta: { title: '调度日志', activeMenu: '/monitor/job' }
       }
     ]
-  },
+  }
   // {
   //   path: '/tool/gen-edit',
   //   component: Layout,
@@ -224,14 +366,14 @@ export const dynamicRoutes = [
 ]
 
 // 防止连续点击多次路由报错
-let routerPush = Router.prototype.push;
+let routerPush = Router.prototype.push
 Router.prototype.push = function push(location) {
-  return routerPush.call(this, location).catch(err => err)
+  return routerPush.call(this, location).catch((err) => err)
 }
 
 export default new Router({
   // mode: 'history', // 去掉url中的#
   base: '/webapp/spot-web/',
   scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
+  routes: [...constantRoutes, ...BPAdminRoutes]
 })
