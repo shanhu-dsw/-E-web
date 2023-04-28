@@ -94,6 +94,17 @@ export function removeDepartmentApi(data = {}) {
   })
 }
 
+// 单位管理 --> 设置单位问题分类
+export function modifyProblemTypeApi(data = {}) {
+  return request({
+    url: '/supervision-spot/module/supervision.spot.Department/modifyProblemType',
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+}
 // 个人问题类型管理 --> 获取个人问题类型列表
 export function getProblemPersonTypeListApi(data = {}) {
   return request({

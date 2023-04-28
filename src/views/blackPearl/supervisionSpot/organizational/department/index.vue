@@ -66,6 +66,7 @@
 import Table from '@/components/Table'
 import Pagination from '@/components/Pagination'
 import AddDepartmentDialog from './components/addDepartmentDialog'
+import ModifyDepartmentProblemDialog from './components/modifyDepartmentProblemDialog'
 import {
   getDepartmentApi,
   getDepartmentTypeListApi,
@@ -76,7 +77,8 @@ export default {
   components: {
     Table,
     Pagination,
-    AddDepartmentDialog
+    AddDepartmentDialog,
+    ModifyDepartmentProblemDialog
   },
   data() {
     return {
@@ -89,10 +91,14 @@ export default {
           prop: 'uuid',
           label: '操作',
           align: 'left',
-          width: 150,
+          width: 250,
           render: (h, { row }) => {
             return (
               <fragment>
+                <ModifyDepartmentProblemDialog
+                  onRefreshList={() => this.getDepartmentList()}
+                  currentDepartment={row}
+                />
                 <AddDepartmentDialog
                   typeList={this.typeList}
                   onRefreshList={() => this.getDepartmentList()}
