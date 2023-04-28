@@ -65,6 +65,10 @@ export default {
     summaryMethod: {
       type: Function,
       default: () => {}
+    },
+    tHeight: {
+      type: Number,
+      default: undefined
     }
   },
   data() {
@@ -73,7 +77,9 @@ export default {
     }
   },
   mounted() {
-    this.tableHeight = this.$refs.tableContainer.offsetHeight - 20
+    this.tableHeight = this.tHeight
+      ? this.tHeight
+      : this.$refs.tableContainer.offsetHeight - 20
   },
   methods: {
     getAttrs(h, column) {

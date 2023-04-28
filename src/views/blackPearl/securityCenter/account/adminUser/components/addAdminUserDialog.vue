@@ -26,6 +26,15 @@
         label-position="right"
         label-width="auto"
       >
+        <el-form-item label="单位" prop="department_uuid" :required="!isEdit">
+          <el-cascader
+            :style="{ width: '100%' }"
+            v-model="form.department_uuid"
+            :props="cascaderProps"
+            placeholder="请选择单位"
+            clearable
+          ></el-cascader>
+        </el-form-item>
         <el-form-item label="角色名称" prop="role_uuid" :required="!isEdit">
           <el-select
             :style="{ width: '100%' }"
@@ -46,6 +55,13 @@
           <el-input
             v-model="form.name"
             placeholder="请输入4-16位的数字、大小写字母、下划线或横线"
+            clearable
+          />
+        </el-form-item>
+        <el-form-item label="姓名" prop="real_name" :required="!isEdit">
+          <el-input
+            v-model="form.real_name"
+            placeholder="请输入1-16位的任意字符"
             clearable
           />
         </el-form-item>
@@ -78,6 +94,7 @@ import {
   addAdminUserApi,
   modifyAdminUserApi
 } from '@/api/blackPearl/securityCenter'
+import { getDepartmentApi } from '@/api/blackPearl/supervisionSpot'
 
 export default {
   components: {
@@ -103,12 +120,26 @@ export default {
     return {
       dialogVisible: false,
       form: {
+        department_uuid: [],
         role_uuid: '',
         name: '',
+        real_name: '',
         password: '',
         status: 'NORMAL'
       },
       rules: {
+        department_uuid: [
+          {
+            validator: (rule, val, callback) => {
+              if (!this.isEdit && (!val || val.length === 0)) {
+                callback(new Error('请选择单位'))
+              } else {
+                callback()
+              }
+            },
+            trigger: 'change'
+          }
+        ],
         role_uuid: [
           {
             validator: (rule, val, callback) => {
@@ -137,7 +168,24 @@ export default {
                 callback()
               }
             },
-            trigger: 'change'
+            trigger: ['change', 'blur']
+          }
+        ],
+        real_name: [
+          {
+            validator: (rule, val, callback) => {
+              if (!this.isEdit && !val) {
+                callback(new Error('请输入姓名'))
+              } else if (
+                (!this.isEdit || val) &&
+                !new RegExp(/^.{1,16}$/).test(val)
+              ) {
+                callback(new Error('请输入1-16位的任意字符'))
+              } else {
+                callback()
+              }
+            },
+            trigger: ['change', 'blur']
           }
         ],
         password: [
@@ -154,9 +202,26 @@ export default {
                 callback()
               }
             },
-            trigger: 'change'
+            trigger: ['change', 'blur']
           }
         ]
+      },
+      cascaderProps: {
+        checkStrictly: true,
+        lazy: true,
+        lazyLoad(node, resolve) {
+          let { level, value: parent_uuid = 0 } = node
+          level = level + 1 // level默认从0开始，接口要求从1开始
+          getDepartmentApi({ parent_uuid, level }).then((resp) => {
+            let { array: list = [] } = resp || {}
+            let nodes = list.map((item) => ({
+              value: item.uuid,
+              label: item.name,
+              leaf: level >= 4 // 共5级，这里筛选父级单位，最多4级
+            }))
+            resolve(nodes)
+          })
+        }
       }
     }
   },
@@ -165,10 +230,24 @@ export default {
     onDialogOpen() {
       // 编辑回填数据
       if (this.isEdit) {
-        let { role_uuid, name, status, uuid } = this.currentAdminUser
-        this.form = {
+        let {
           role_uuid,
           name,
+          real_name,
+          status,
+          uuid,
+          parent_array,
+          department_uuid
+        } = this.currentAdminUser
+        let departmentUuids = [
+          ...parent_array.map((item) => item.uuid),
+          department_uuid
+        ]
+        this.form = {
+          department_uuid: departmentUuids,
+          role_uuid,
+          name,
+          real_name,
           status,
           password: '         ', // 密码回填空字符串
           uuid
@@ -183,10 +262,21 @@ export default {
     onDialogOk() {
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
-          let { role_uuid, name, password, status, uuid } = this.form
+          let {
+            role_uuid,
+            name,
+            real_name,
+            password,
+            status,
+            uuid,
+            department_uuid
+          } = this.form
+          department_uuid = department_uuid[department_uuid.length - 1] || ''
           let param = {}
+          department_uuid ? (param.department_uuid = department_uuid) : ''
           role_uuid ? (param.role_uuid = role_uuid) : ''
           name ? (param.name = name) : ''
+          real_name ? (param.real_name = real_name) : ''
           let delTrimPassword = password.trim()
           delTrimPassword ? (param.password = delTrimPassword) : ''
 

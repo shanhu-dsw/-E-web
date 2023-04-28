@@ -6,7 +6,17 @@
     <div class="bottom-container">
       <div class="filter-container">
         <div class="filter-input">
-          <span class="title">用户名：</span>
+          <span class="title">单位：</span>
+          <el-cascader
+            class="cascader-ipt"
+            v-model="searchParams.department_uuid"
+            :props="cascaderProps"
+            :show-all-levels="false"
+            @change="getAdminUserList()"
+            placeholder="请选择单位"
+            clearable
+          ></el-cascader>
+          <span class="title ml20">用户名：</span>
           <el-input
             class="ipt"
             v-model="searchParams.name"
@@ -71,11 +81,13 @@
 import Table from '@/components/Table'
 import Pagination from '@/components/Pagination'
 import AddAdminUserDialog from './components/addAdminUserDialog'
+import SetDepartmentForAdmin from './components/setDepartmentForAdmin'
 import {
   getAdminUserListApi,
   getRoleListApi,
   removeAdminUserApi
 } from '@/api/blackPearl/securityCenter'
+import { getDepartmentApi } from '@/api/blackPearl/supervisionSpot'
 
 export default {
   components: {
@@ -87,12 +99,14 @@ export default {
     return {
       dataSource: [],
       columns: [
-        { prop: 'name', label: '用户名', align: 'left' },
-        { prop: 'role_name', label: '角色', align: 'left' },
+        { prop: 'full_name', label: '单位', align: 'left' },
+        { prop: 'name', label: '用户名', align: 'left', width: 200 },
+        { prop: 'role_name', label: '角色', align: 'left', width: 200 },
         {
           prop: 'frozen_timestamp',
           label: '冻结时间',
           align: 'left',
+          width: 180,
           render: (h, { row: { frozen_timestamp } }) => {
             let frozenTime = frozen_timestamp
               ? this.parseTime(frozen_timestamp, '{y}-{m}-{d}')
@@ -104,6 +118,7 @@ export default {
           prop: 'status',
           label: '状态',
           align: 'left',
+          width: 100,
           render: (h, { row: { status } }) => {
             return this.statusToStr(status)
           }
@@ -112,9 +127,14 @@ export default {
           prop: 'uuid',
           label: '操作',
           align: 'left',
+          width: 200,
           render: (h, { row }) => {
             return (
               <fragment>
+                <SetDepartmentForAdmin
+                  onRefreshList={() => this.getAdminUserList()}
+                  currentAdminUser={row}
+                />
                 <AddAdminUserDialog
                   roleList={this.roleList}
                   onRefreshList={() => this.getAdminUserList()}
@@ -139,14 +159,31 @@ export default {
         pageSize: 10
       },
       searchParams: {
+        department_uuid: '',
         name: '',
         role_uuid: '',
         status: ''
       },
+      cascaderProps: {
+        checkStrictly: true,
+        lazy: true,
+        lazyLoad(node, resolve) {
+          let { level, value: parent_uuid = 0 } = node
+          level = level + 1 // level默认从0开始，接口要求从1开始
+          getDepartmentApi({ parent_uuid, level }).then((resp) => {
+            let { array: list = [] } = resp || {}
+            let nodes = list.map((item) => ({
+              value: item.uuid,
+              label: item.name,
+              leaf: level >= 4 // 共5级，这里筛选上级单位，最多4级
+            }))
+            resolve(nodes)
+          })
+        }
+      },
       roleList: [],
       statusList: [
         { title: '正常', val: 'NORMAL' },
-        { title: '冻结', val: 'FROZEN' },
         { title: '锁定', val: 'LOCK' }
       ]
     }
@@ -192,7 +229,13 @@ export default {
       }
       for (let key in this.searchParams) {
         if (this.searchParams[key]) {
-          params[key] = this.searchParams[key]
+          // 父级菜单字段为数组，需特殊处理
+          if (key === 'department_uuid') {
+            let tem = this.searchParams[key]
+            params[key] = tem[tem.length - 1]
+          } else {
+            params[key] = this.searchParams[key]
+          }
         }
       }
       getAdminUserListApi(params).then(
@@ -254,6 +297,10 @@ export default {
         .ipt {
           width: 100%;
           max-width: 200px;
+        }
+        .cascader-ipt {
+          width: 100%;
+          max-width: 260px;
         }
         .sel {
           width: 100%;

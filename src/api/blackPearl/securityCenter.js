@@ -134,7 +134,7 @@ export function modifyRolePermissionApi(data = {}) {
 // 管理员管理 --> 获取管理员
 export function getAdminUserListApi(data = {}) {
   return request({
-    url: '/supervision-spot/module/security.Admin/getAdmin',
+    url: '/supervision-spot/module/supervision.spot.AdminInfo/getAdmin',
     method: 'post',
     data,
     headers: {
@@ -146,7 +146,7 @@ export function getAdminUserListApi(data = {}) {
 // 管理员管理 --> 添加管理员
 export function addAdminUserApi(data = {}) {
   return request({
-    url: '/supervision-spot/module/security.Admin/addAdmin',
+    url: '/supervision-spot/module/supervision.spot.AdminInfo/addAdmin',
     method: 'post',
     data,
     headers: {
@@ -158,7 +158,7 @@ export function addAdminUserApi(data = {}) {
 // 管理员管理 --> 修改管理员
 export function modifyAdminUserApi(data = {}) {
   return request({
-    url: '/supervision-spot/module/security.Admin/modifyAdmin',
+    url: '/supervision-spot/module/supervision.spot.AdminInfo/modifyAdmin',
     method: 'post',
     data,
     headers: {
@@ -170,7 +170,7 @@ export function modifyAdminUserApi(data = {}) {
 // 管理员管理 --> 删除管理员
 export function removeAdminUserApi(data = {}) {
   return request({
-    url: '/supervision-spot/module/security.Admin/removeAdmin',
+    url: '/supervision-spot/module/supervision.spot.AdminInfo/removeAdmin',
     method: 'post',
     data,
     headers: {

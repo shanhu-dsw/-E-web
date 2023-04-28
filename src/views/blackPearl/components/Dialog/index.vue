@@ -8,7 +8,7 @@
     class="dialog-container"
   >
     <slot></slot>
-    <span slot="footer" class="dialog-footer">
+    <span slot="footer" class="dialog-footer" v-if="isShowFooter">
       <el-button @click="onCancel()">取 消</el-button>
       <el-button type="primary" @click="onOk()">确 定</el-button>
     </span>
@@ -30,6 +30,10 @@ export default {
     width: {
       type: String,
       default: '50%'
+    },
+    isShowFooter: {
+      type: Boolean,
+      default: true
     }
   },
   data() {

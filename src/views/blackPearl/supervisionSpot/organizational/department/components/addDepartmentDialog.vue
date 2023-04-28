@@ -31,7 +31,7 @@
             :style="{ width: '100%' }"
             v-model="form.parent_uuid"
             :props="cascaderProps"
-            placeholder="请选择上级单位"
+            placeholder="请选择上级单位（不选默认新增一级单位）"
             clearable
           ></el-cascader>
         </el-form-item>

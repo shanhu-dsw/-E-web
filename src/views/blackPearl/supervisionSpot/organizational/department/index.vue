@@ -13,6 +13,7 @@
             :props="cascaderProps"
             :show-all-levels="false"
             @change="getDepartmentList()"
+            placeholder="请选择上级单位"
             clearable
           ></el-cascader>
           <span class="title ml20">类型：</span>
